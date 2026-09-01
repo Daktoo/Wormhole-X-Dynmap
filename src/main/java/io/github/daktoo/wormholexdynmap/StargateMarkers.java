@@ -186,7 +186,14 @@ final class StargateMarkers {
                     continue;
                 }
 
-                String id = markerId(gate, name);
+                String id = markerId(name);
+                if (!seen.add(id)) {
+                    // Two gates claiming one id would silently overwrite each
+                    // other, so say so rather than quietly dropping one.
+                    plugin.getLogger().warning("Two stargates resolve to the same marker id '"
+                            + id + "' (name: " + name + "). Only one will appear on the map.");
+                    continue;
+                }
                 // Dynmap treats these as two separate things for markers: the
                 // label is the hover tooltip, the description is what gets
                 // bound as the click popup. Only areas and circles fall back to
@@ -194,7 +201,6 @@ final class StargateMarkers {
                 // HTML in the label shows a tooltip and nothing on click.
                 String hoverLabel = name;
                 String popup = buildPopup(gate, name, loc, network);
-                seen.add(id);
 
                 Marker marker = owned.get(id);
                 if (marker == null) {
@@ -230,12 +236,29 @@ final class StargateMarkers {
         });
     }
 
-    private String markerId(Stargate gate, String name) {
-        long gateId = gate.getGateId();
-        if (gateId > 0L) {
-            return "wxt_" + gateId;
+    /**
+     * Marker ids are derived from the gate NAME, never from getGateId().
+     *
+     * Wormhole X-Treme leaves the numeric id unset (-1) until a gate reaches
+     * the database, and reads a null Id column back as 0, so live gates
+     * routinely share an id. Keying markers on it makes colliding gates
+     * overwrite each other's marker and vanish from the map. Names are the
+     * unique key in StargateManager, so they are what we use.
+     *
+     * Characters outside [A-Za-z0-9] are hex-escaped rather than flattened to
+     * underscores, so "Gate A" and "Gate-A" cannot collapse onto one id.
+     */
+    private String markerId(String name) {
+        StringBuilder id = new StringBuilder("wxt_");
+        for (int i = 0; i < name.length(); i++) {
+            char c = name.charAt(i);
+            if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')) {
+                id.append(c);
+            } else {
+                id.append('-').append(Integer.toHexString(c));
+            }
         }
-        return "wxt_" + name.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9_]", "_");
+        return id.toString();
     }
 
     /**
