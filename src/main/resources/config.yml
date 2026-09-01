@@ -1,0 +1,52 @@
+# WormholeXDynmap
+# Puts every Wormhole X-Treme stargate on the Dynmap web map.
+
+# Refresh the map as soon as a gate is built or removed.
+#
+# If your Wormhole X-Treme build has the gate event API, the plugin uses it and
+# updates within a tick or two. If not, it falls back to watching the WXT
+# commands, sign edits and gate-block breaks, which is slightly slower but
+# needs no changes to WXT. Check the console on startup to see which it picked.
+instant-updates: true
+
+# How long to wait after a gate-changing action before refreshing, in ticks.
+# -1 chooses automatically: 2 ticks on the event path, 20 on the fallback path.
+instant-update-delay-ticks: -1
+
+# Full re-scan interval when running on the FALLBACK path, in seconds.
+update-interval-seconds: 10
+
+# Full re-scan interval when running on the EVENT path, in seconds. This is
+# only a safety net for things no event covers - a manual database edit, say -
+# so it can be lazy.
+safety-net-interval-seconds: 120
+
+marker-set:
+  id: wormholexdynmap.stargates
+  # The name of the toggleable layer in Dynmap's sidebar.
+  label: Stargates
+  layer-priority: 10
+  hide-by-default: false
+  # 0 = always visible. Raise it to hide markers when zoomed far out.
+  min-zoom: 0
+
+marker:
+  # Any icon Dynmap knows about. 'portal' is the stargate-looking one.
+  icon: portal
+
+  # The popup shown when a marker is clicked. Placeholders:
+  #   %name% %x% %y% %z% %world% %owner% %network% %shape%
+  label-format: |-
+    <div class="regioninfo"><div class="infowindow">
+    <span style="font-weight:bold;font-size:110%;">%name% (/dial %name%)</span><br/>
+    %x% %y% %z%<br/>
+    O:%owner%<br/>
+    N:%network%<br/>
+    %shape%
+    </div></div>
+
+# Worlds whose gates should be left off the map entirely.
+hidden-worlds: []
+
+# Networks whose gates should be left off the map, e.g. staff-only ones.
+hidden-networks: []

@@ -1,0 +1,19 @@
+name: WormholeXDynmap
+main: io.github.daktoo.wormholexdynmap.WormholeXDynmap
+version: ${project.version}
+api-version: '1.21'
+authors: [Dakto_]
+description: Shows Wormhole X-Treme stargates on Dynmap as portal markers.
+depend: [dynmap, WormholeXTreme]
+
+commands:
+  wxdynmap:
+    description: Refresh the stargate layer or reload the config.
+    usage: /<command> <update|reload>
+    permission: wormholexdynmap.admin
+    aliases: [wxdyn]
+
+permissions:
+  wormholexdynmap.admin:
+    description: Use /wxdynmap.
+    default: op
