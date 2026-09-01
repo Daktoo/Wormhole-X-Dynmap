@@ -38,13 +38,13 @@ marker:
   #   %name% %x% %y% %z% %world% %owner% %network% %shape%
   label-format: |-
     <div class="regioninfo"><div class="infowindow">
-    <span style="font-weight:bold;font-size:110%;">%name% (/dial %name%)</span><br/>
-    %x% %y% %z%<br/>
-    O:%owner%<br/>
-    N:%network%<br/>
-    %shape%
+    <div style="font-size:120%;font-weight:bold;margin-bottom:6px;">%name%</div>
+    <div style="font-family:monospace;margin-bottom:8px;">/dial %name%</div>
+    <div style="margin-bottom:8px;">%x% %y% %z%</div>
+    <div>O:%owner%</div>
+    <div>N:%network%</div>
+    <div>%shape%</div>
     </div></div>
-
 # Worlds whose gates should be left off the map entirely.
 hidden-worlds: []
 
