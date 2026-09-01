@@ -131,4 +131,4 @@ then swap the dependency in `pom.xml` for the local coordinates - there is a com
 
 ## Credits
 
-Wormhole X-Treme maintained fork at [Daktoo/Wormhole-X-Treme](https://github.com/Daktoo/Wormhole-X-Treme). Dynmap by [webbukkit](https://github.com/webbukkit/dynmap).
+Wormhole X-Treme maintained fork at [Daktoo/Wormhole-X-Treme](https://github.com/Daktoo/Wormhole-X-Treme). Dynmap by [webbukkit/dynmap](https://github.com/webbukkit/dynmap).
