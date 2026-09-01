@@ -82,16 +82,6 @@ Underneath either path a periodic full re-scan runs as a safety net - every 10 s
 
 Markers are non-persistent, so Dynmap rebuilds them from Wormhole X-Treme's own data on every restart. There is no separate marker file to drift out of sync.
 
-## Optional: the Wormhole X-Treme event API
-
-`wormholextreme-events.patch` adds a small event API to Wormhole X-Treme. It is entirely optional, but it makes map updates immediate and gives any other plugin a clean way to react to gates.
-
-```bash
-cd /path/to/Wormhole-X-Treme
-git apply /path/to/wormholextreme-events.patch
-mvn clean install
-```
-
 What it adds:
 
 - **`StargateCreatedEvent`**, with a `Cause` of `BUILT`, `LOADED` or `IMPORTED`, so listeners can tell a fresh build from gates being read back out of the database on restart. Fired at the end of `StargateManager.addStargate`, once the gate is fully indexed and registered on its network.
@@ -127,7 +117,7 @@ then swap the dependency in `pom.xml` for the local coordinates - there is a com
 
 **Updates feel slow.** Check the startup log for which path is active. If it says it is watching commands and sign edits, the server is running an unpatched Wormhole X-Treme - apply the patch above and rebuild both, in that order. Building the Dynmap plugin first will quietly leave you on the fallback path.
 
-**Markers in the wrong spot.** Gates are anchored on the dial lever. Gates without one — older shapes, or oddly built gates - fall back to the teleport point, then the dial sign, then a portal block.
+**Markers in the wrong spot.** Gates are anchored on the dial lever. Gates without one - older shapes, or oddly built gates - fall back to the teleport point, then the dial sign, then a portal block.
 
 ## Credits
 
