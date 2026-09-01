@@ -19,7 +19,7 @@ Shape
 | --- | --- |
 | Server | Paper 26.2 |
 | Dynmap | 3.x, with the `markers` component enabled |
-| Wormhole X-Treme | any recent build (the event API is optional — see below) |
+| Wormhole X-Treme | any recent build (the event API is optional - see below) |
 
 Both plugins are hard dependencies. WormholeXDynmap will refuse to load without them rather than half-working.
 
