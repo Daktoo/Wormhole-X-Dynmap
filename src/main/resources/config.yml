@@ -34,17 +34,20 @@ marker:
   # Any icon Dynmap knows about. 'portal' is the stargate-looking one.
   icon: portal
 
-  # The popup shown when a marker is clicked. Placeholders:
+  # The card shown when a marker is CLICKED. Placeholders:
   #   %name% %x% %y% %z% %world% %owner% %network% %shape%
-  label-format: |-
+  #
+  # Hovering a marker shows just the gate name as a plain tooltip; Dynmap keeps
+  # those two separate for markers, so HTML only belongs in here.
+  popup-format: |-
     <div class="regioninfo"><div class="infowindow">
-    <div style="font-size:120%;font-weight:bold;margin-bottom:6px;">%name%</div>
-    <div style="font-family:monospace;margin-bottom:8px;">/dial %name%</div>
-    <div style="margin-bottom:8px;">%x% %y% %z%</div>
-    <div>O:%owner%</div>
-    <div>N:%network%</div>
-    <div>%shape%</div>
+    <span style="font-weight:bold;font-size:110%;">%name% (/dial %name%)</span><br/>
+    %x% %y% %z%<br/>
+    O:%owner%<br/>
+    N:%network%<br/>
+    %shape%
     </div></div>
+
 # Worlds whose gates should be left off the map entirely.
 hidden-worlds: []
 

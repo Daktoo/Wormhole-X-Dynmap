@@ -40,7 +40,7 @@ final class StargateMarkers {
     private String setId;
     private String setLabel;
     private String iconId;
-    private String labelFormat;
+    private String popupFormat;
     private int layerPriority;
     private boolean hideByDefault;
     private int minZoom;
@@ -60,7 +60,8 @@ final class StargateMarkers {
         this.hideByDefault = cfg.getBoolean("marker-set.hide-by-default", false);
         this.minZoom = cfg.getInt("marker-set.min-zoom", 0);
         this.iconId = cfg.getString("marker.icon", "portal");
-        this.labelFormat = cfg.getString("marker.label-format", defaultLabelFormat());
+        this.popupFormat = cfg.getString("marker.popup-format",
+                cfg.getString("marker.label-format", defaultPopupFormat()));
         this.hiddenWorlds = lowercase(cfg.getStringList("hidden-worlds"));
         this.hiddenNetworks = lowercase(cfg.getStringList("hidden-networks"));
     }
@@ -73,7 +74,7 @@ final class StargateMarkers {
         return out;
     }
 
-    private static String defaultLabelFormat() {
+    private static String defaultPopupFormat() {
         return "<div class=\"regioninfo\"><div class=\"infowindow\">"
                 + "<span style=\"font-weight:bold;font-size:110%;\">%name% (/dial %name%)</span><br/>"
                 + "%x% %y% %z%<br/>"
@@ -186,7 +187,13 @@ final class StargateMarkers {
                 }
 
                 String id = markerId(gate, name);
-                String label = buildLabel(gate, name, loc, network);
+                // Dynmap treats these as two separate things for markers: the
+                // label is the hover tooltip, the description is what gets
+                // bound as the click popup. Only areas and circles fall back to
+                // the label when there is no description, so a marker with its
+                // HTML in the label shows a tooltip and nothing on click.
+                String hoverLabel = name;
+                String popup = buildPopup(gate, name, loc, network);
                 seen.add(id);
 
                 Marker marker = owned.get(id);
@@ -194,14 +201,18 @@ final class StargateMarkers {
                     marker = markerSet.findMarker(id);
                 }
                 if (marker == null) {
-                    marker = markerSet.createMarker(id, label, true, worldName,
+                    // createMarker has no description parameter, so it has to
+                    // be set straight afterwards.
+                    marker = markerSet.createMarker(id, hoverLabel, false, worldName,
                             loc.getX() + 0.5D, loc.getY() + 0.5D, loc.getZ() + 0.5D, icon, false);
                     if (marker == null) {
                         continue;
                     }
+                    marker.setDescription(popup);
                 } else {
                     marker.setLocation(worldName, loc.getX() + 0.5D, loc.getY() + 0.5D, loc.getZ() + 0.5D);
-                    marker.setLabel(label, true);
+                    marker.setLabel(hoverLabel, false);
+                    marker.setDescription(popup);
                     if (icon != null && marker.getMarkerIcon() != icon) {
                         marker.setMarkerIcon(icon);
                     }
@@ -268,12 +279,12 @@ final class StargateMarkers {
         return (name == null || name.isEmpty()) ? "Standard" : name;
     }
 
-    private String buildLabel(Stargate gate, String name, Location loc, String network) {
+    private String buildPopup(Stargate gate, String name, Location loc, String network) {
         String owner = gate.getGateOwner();
         if (owner == null || owner.isEmpty()) {
             owner = "unknown";
         }
-        return labelFormat
+        return popupFormat
                 .replace("%name%", escape(name))
                 .replace("%x%", String.valueOf(loc.getBlockX()))
                 .replace("%y%", String.valueOf(loc.getBlockY()))
