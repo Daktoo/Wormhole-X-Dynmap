@@ -92,7 +92,7 @@ public final class WormholeXDynmap extends JavaPlugin {
     public void onDisable() {
         stopPolling();
         if (apiListener != null) {
-            DynmapCommonAPIListener.unregisterCommonAPIListener(apiListener);
+            DynmapCommonAPIListener.unregister(apiListener);
             apiListener = null;
         }
         if (markers != null) {
